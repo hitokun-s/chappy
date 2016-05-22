@@ -1,0 +1,124 @@
+# モジュール作成方法参考
+
+http://blog.akihiko.me/2015/04/05/pypi-packaging/
+https://docs.python.org/2/distutils/setupscript.html
+http://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/quickstart.html#lay-out-your-project
+http://qiita.com/airtoxin/items/2eafb930fa9b54ee7149
+
+# pip freezeについて
+
+http://kuteken.hatenablog.com/entry/2015/03/21/211936
+
+# virtualenvについて
+
+http://qiita.com/H-A-L/items/5d5a2ef73be8d140bdf3#3-5
+
+# setup.pyに書く「classifiers」について
+
+https://pypi.python.org/pypi?%3Aaction=list_classifiers
+
+# リリース用パッケージング
+
+    python setup.py sdist
+
+=> tar.gzまたはzipができる。
+
+# MANIFEST.in
+
+デフォルトだとPythonのファイルしかモジュールに入れてくれないので、特別なテキストファイルとかを入れるためにはこれが必要。
+（例）README.mdを入れたい => include README.md と書く
+requirements.txtとか用意するならそれもここに記述しておく必要がある。
+
+# bdist_wheelコマンドについて
+
+http://momijiame.tumblr.com/post/90829820326/python-wheel-でパッケージを配布する
+
+- wheelモジュールをインストールすることで使えるようになる
+- whlファイルを作れるようになる
+- universalオプション：「1」に設定すると、python2 & 3 系の両方に対応していることを示すようなwhlパッケージ名になる
+
+    python setup.py bdist_wheel
+
+を実行すると、dist以下にwhlファイルができる。
+**whlファイルの実体は単なるzipファイル！**
+
+# egg_infoコマンドについて
+
+http://www.freia.jp/taka/blog/662/
+
+- tag_svn_revisionオプション：trueにするとeggファイル名内にリビジョン番号を含むようになる
+
+# 配布用ファイルを作成する
+
+    python setup.py egg_info sdist bdist_wheel
+
+# ホームディレクトリに作る.pypircファイルの例
+
+    [distutils]
+    index-servers=pypi
+
+    [pypi]
+    repository = https://pypi.python.org/pypi
+    username = <username>
+    password = <password>
+
+# テストの書き方参考
+
+http://qiita.com/tomotaka_ito/items/1644db679264dcbb11f5
+
+# 関数のドキュメンテーション
+
+http://stackoverflow.com/questions/405582/function-and-class-documentation-best-practices-for-python
+
+IDEAの機能で自動生成する方法：関数宣言直下で「'''」または「"""」を入力してEnter。
+
+# ロギングについて
+
+http://qiita.com/amedama/items/b856b2f30c2f38665701
+http://tell-k.hatenablog.com/entry/2012/01/10/200620
+
+nosetest下で標準出力を表に出す方法：「--nocapture」オプションをつける。または「NOSE_NOCAPTURE=1」にセットする。
+http://stackoverflow.com/questions/5975194/nosetests-is-capturing-the-output-of-my-print-statements-how-to-circumvent-this
+
+nosetest下でlogger出力を表に出す方法：「--nologcapture」オプションをつける。または「NOSE_NOLOGCAPTURE=1」にセットする。
+http://nose.readthedocs.io/en/latest/plugins/logcapture.html
+
+# python文法参考
+
+http://qiita.com/0xfffffff7/items/6ef16e79fe9886acb3f2
+
+# python命名規則
+
+http://komaken.me/blog/2013/02/25/googleコーディングガイドを読みつつ、いろいろな命/
+
+# sqliteに代わる候補としての、ドキュメントベースjsonベース軽量DB
+
+https://github.com/msiemens/tinydb
+
+# chainerのChainクラス（MnistMLPなど）の__call__(self,x,t)はどこで呼ばれるのか？
+
+chainer/links/model/classifier.py(54)
+
+    self.y = self.predictor(x)
+
+で呼ばれる。
+chainerのMNISTサンプルでmodelとなるのはClassifier。
+Classifierのコンストラクタ引数はChainオブジェクトであり、それは、Classifier.predictorにセットされる。
+
+ただしImage|Netサンプルの場合は、modelにはNINオブジェクト（Chain子クラス）が入る。
+どういうこと？ optimizer.update()の中身がわかれば、modelの条件がわかるはず！？
+
+
+# six.movesとは？
+
+python2,3の互換性のためのライブラリ。
+例えばrangeは、python2のxrangeがpython3だとrangeになる。このバージョン差異を解消するために、six.moves.rangeが使える。
+
+
+
+
+
+
+
+
+
